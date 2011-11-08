@@ -67,12 +67,16 @@
          '("text/html"))))
 
 (deftest test-attribute-filtering-by-regexp
-  (is (= (xml1-> atom1 :entry :title (attr-re :type #"ml") text)
-         "<h1>experimenting with vnc</h1>")))
+  (is (= (xml-> atom1 :entry :title (attr-re :type #"ml") text)
+         '("<h1>experimenting with vnc</h1>"))))
 
 (deftest test-text-matching
-  (is (= (xml1-> atom1 :entry [:title (text-re #"vnc")] :published text)
-         "2008-02-07")))
+  (is (= (xml-> atom1 :entry [:title (text-re #"vnc")] :published text)
+         '("2008-02-07"))))
+
+(deftest test-regexp-shortcut
+  (is (= (xml-> atom1 :entry :published #"^\d\d\d\d-\d\d-\d\d$" text)
+         '("2008-02-13" "2008-02-07"))))
 
 ;; This was in the original code under a comment, but is fails
 #_(deftest test-ancestors

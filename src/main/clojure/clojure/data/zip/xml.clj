@@ -63,6 +63,9 @@
   ^{:private true}
   [preds] (fn [loc] (and (seq (apply xml-> loc preds)) (list loc))))
 
+(defn- regexp? [x]
+  (instance? java.util.regex.Pattern x))
+
 (defn xml->
   "The loc is passed to the first predicate.  If the predicate returns
   a collection, each value of the collection is passed to the next
@@ -84,7 +87,8 @@
   (zf/mapcat-chain loc preds
                    #(cond (keyword? %) (tag= %)
                           (string?  %) (text= %)
-                          (vector?  %) (seq-test %))))
+                          (vector?  %) (seq-test %)
+                          (regexp?  %) (text-re %))))
 
 (defn xml1->
   "Returns the first item from loc based on the query predicates
