@@ -24,6 +24,11 @@
   attribute named attrname whose value is attrval."
   [attrname attrval] (fn [loc] (= attrval (attr loc attrname))))
 
+(defn attr-re
+  "Returns a query predicate that matches a node when it has an
+  attribute named attrname whose value matches re"
+  [attrname re] (fn [loc] (boolean (re-seq re (attr loc attrname)))))
+
 (defn tag=
   "Returns a query predicate that matches a node when its is a tag
   named tagname."
@@ -46,6 +51,11 @@
   "Returns a query predicate that matches a node when its textual
   content equals s."
   [s] (fn [loc] (= (text loc) s)))
+
+(defn text-re
+  "Returns a query predicate that matches a node when its textual
+  content matches re."
+  [re] (fn [loc] (boolean (re-seq re (text loc)))))
 
 (defn seq-test
   "Returns a query predicate that matches a node when its xml content

@@ -24,7 +24,7 @@
   <entry>
     <id>2</id>
     <published>2008-02-07</published>
-    <title type='text'>experimenting with vnc</title>
+    <title type='html'><![CDATA[<h1>experimenting with vnc</h1>]]></title>
     <author><name>agriffis</name></author>
   </entry>
 </feed>
@@ -65,6 +65,14 @@
 (deftest test-attribute-filtering
   (is (= (xml-> atom1 :link [(attr= :rel "alternate")] (attr :type))
          '("text/html"))))
+
+(deftest test-attribute-filtering-by-regexp
+  (is (= (xml1-> atom1 :entry :title (attr-re :type #"ml") text)
+         "<h1>experimenting with vnc</h1>")))
+
+(deftest test-text-matching
+  (is (= (xml1-> atom1 :entry [:title (text-re #"vnc")] :published text)
+         "2008-02-07")))
 
 ;; This was in the original code under a comment, but is fails
 #_(deftest test-ancestors
