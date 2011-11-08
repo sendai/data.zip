@@ -18,13 +18,13 @@
   <entry>
     <id>1</id>
     <published>2008-02-13</published>
-    <title type='text'>clojure is the best lisp yet</title>
+    <title type='text' show='true'>clojure is the best lisp yet</title>
     <author><name>Chouser</name></author>
   </entry>
   <entry>
     <id>2</id>
     <published>2008-02-07</published>
-    <title type='html'><![CDATA[<h1>experimenting with vnc</h1>]]></title>
+    <title type='html' show='true'><![CDATA[<h1>experimenting with vnc</h1>]]></title>
     <author><name>agriffis</name></author>
   </entry>
 </feed>
@@ -77,6 +77,24 @@
 (deftest test-regexp-shortcut
   (is (= (xml-> atom1 :entry :published #"^\d\d\d\d-\d\d-\d\d$" text)
          '("2008-02-13" "2008-02-07"))))
+
+(deftest test-map-shortcut
+  (is (= (xml-> atom1 :entry :title {} text)
+         '("clojure is the best lisp yet" "<h1>experimenting with vnc</h1>")))
+  (is (= (xml-> atom1 :link {:rel "alternate"} (attr :type))
+         '("text/html")))
+  (is (= (xml-> atom1 :entry :title {:show "true"} text)
+         '("clojure is the best lisp yet" "<h1>experimenting with vnc</h1>")))
+  (is (= (xml-> atom1 :entry :title {:type "html"} text)
+         '("<h1>experimenting with vnc</h1>")))
+  (is (= (xml-> atom1 :entry :title {:none "ouch"} text)
+         '()))
+  (is (= (xml-> atom1 :entry :title {:show "true" :type "html"} text)
+         '("<h1>experimenting with vnc</h1>")))
+  (is (= (xml-> atom1 :entry :title {:show "true" :type "text"} text)
+         '("clojure is the best lisp yet")))
+  (is (= (xml-> atom1 :entry :title {:show "true" :type "image"} text)
+         '())))
 
 ;; This was in the original code under a comment, but is fails
 #_(deftest test-ancestors

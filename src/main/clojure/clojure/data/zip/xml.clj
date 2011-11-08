@@ -88,6 +88,7 @@
                    #(cond (keyword? %) (tag= %)
                           (string?  %) (text= %)
                           (vector?  %) (seq-test %)
+                          (map?     %) (seq-test (vec (map (fn [[a s]] (attr= a s)) %)))
                           (regexp?  %) (text-re %))))
 
 (defn xml1->
