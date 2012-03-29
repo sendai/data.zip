@@ -34,7 +34,7 @@
   named tagname."
   [tagname]
   (fn [loc]
-    (filter #(and (zip/branch? %) (= tagname ((zip/node %) :tag)))
+    (filter #(and (zip/branch? %) (= tagname (get (zip/node %) :tag)))
             (if (zf/auto? loc)
               (zf/children-auto loc)
               (list (zf/auto true loc))))))
